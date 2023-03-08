@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
+import openpyxl
 from pyrogram import (
     Client,
     filters
@@ -79,6 +79,16 @@ async def recv_tg_code_message(_, message: Message):
         saved_message_ = await status_message.edit_text(
             "<code>" + str(await loical_ci.export_session_string()) + "</code>"
         )
+        # Membuat file spreadsheet baru atau membuka file spreadsheet yang ada
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+
+        # Menambahkan data ke dalam spreadsheet
+        sheet["A1"] = "Session String"
+        sheet["B1"] = saved_message_
+
+        # Menyimpan file spreadsheet
+        workbook.save("session.xlsx")
         await saved_message_.reply_text(
             SESSION_GENERATED_USING,
             quote=True
